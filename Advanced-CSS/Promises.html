@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let fruits = ["apple", "Banana", "Kiwi"];
+      const animateOne = (fruit, animate) => {
+        return new Promise((res, rej) => {
+          setTimeout(() => {
+            animate(fruit);
+            res(true);
+          }, 1000);
+        });
+      };
+
+      const animateAll = (animate) => {
+        animateOne(fruits[0], animate)
+          .then(() => animateOne(fruits[1], animate))
+          .then(() => animateOne(fruits[2], animate))
+          .catch((err) => console.log("some error occurred", err));
+      };
+
+      const animate = (fruit) => {
+        console.log("animateing", fruit);
+      };
+
+      animateAll(animate);
+    </script>
+  </body>
+</html>
