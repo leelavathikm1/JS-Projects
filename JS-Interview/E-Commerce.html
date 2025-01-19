@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 20px;
+      }
+      .product {
+        margin: 10px 0;
+      }
+      .cart {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>E-Commerce Cart Management System</h1>
+    <div id="product-management">
+      <h2>Products</h2>
+      <div class="product">
+        <span>product-1 - Rs.10</span>
+        <button onclick="addToCart('Product-1', 10)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <span>Product-2 - Rs.20</span>
+        <button onclick="addToCart('Product-2',20)">Add To Cart</button>
+      </div>
+      <div class="product">
+        <span>Product-3 - Rs.30</span>
+        <button onclick="addToCart('Product-3',30)">Add To Cart</button>
+      </div>
+    </div>
+
+    <div class="cart">
+      <h2>Shopping Cart</h2>
+      <ul id="cart-items"></ul>
+      <p>Total Price: Rupees<span id="total-price">0</span></p>
+    </div>
+
+    <script>
+      const cart = {
+        items: {},
+        addItem: function (productName, price) {
+          if (this.items[productName]) {
+            this.items[productName].quantity++;
+          } else {
+            this.items[productName] = { price, quantity: 1 };
+          }
+          this.updateCart();
+        },
+        removeItem: function (productName) {
+          if (this.items[productName]) {
+            this.items[productName].quantity--;
+            if (this.items[productName].quantity === 0) {
+              delete this.items[productName];
+            }
+            this.updateCart();
+          }
+        },
+        calculateTotal: function () {
+          return Object.keys(this.items).reduce((total, productName) => {
+            return (
+              total +
+              this.items[productName].price * this.items[productName].quantity
+            );
+          }, 0);
+        },
+        updateCart: function () {
+          const cartItems = document.getElementById("cart-items");
+          const totalPrice = document.getElementById("total-price");
+
+          cartItems.innerHTML = "";
+          Object.entries(this.items).forEach(
+            ([productName, { price, quantity }]) => {
+              const li = document.createElement("li");
+              li.textContent = `${productName} - $${price}* ${quantity}`;
+
+              const removeButton = document.createElement("button");
+              removeButton.textContent = "Remove";
+              removeButton.onclick = () => this.removeItem(productName);
+
+              li.appendChild(removeButton);
+              cartItems.appendChild(li);
+            }
+          );
+          totalPrice.textContent = this.calculateTotal();
+        },
+      };
+
+      function addToCart(productName, price) {
+        cart.addItem(productName, price);
+      }
+    </script>
+  </body>
+</html>
